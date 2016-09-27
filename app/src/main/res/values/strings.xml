@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Awesome Movies</string>
+    <string name="search_movie_title">Título do filme</string>
+</resources>

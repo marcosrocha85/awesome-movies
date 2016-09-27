@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="movie_thumb_width">72dp</dimen>
+    <dimen name="movie_thumb_height">72dp</dimen>
+    <dimen name="default16dp">16dp</dimen>
+    <dimen name="default72dp">72dp</dimen>
+    <dimen name="star_width">36dp</dimen>
+    <dimen name="start_height">36dp</dimen>
+    <dimen name="rating_size">56dp</dimen>
+    <dimen name="default2dp">2dp</dimen>
+    <dimen name="default4dp">4dp</dimen>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="warning">Atenção</string>
+    <string name="info">Informação</string>
+    <string name="error">Erro</string>
+    <string name="ok">OK</string>
+    <string name="confirmation">Confirmação</string>
+    <string name="yes_button">SIM</string>
+    <string name="no_button">NÃO</string>
+    <string name="working">Trabalhando...</string>
+</resources>
