@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Awesome Movies</string>
     <string name="search_movie_title">Título do filme</string>
+    <string name="search">Pesquisa</string>
+    <string name="search_criteria_required">Digite ao menos 3 caracteres.</string>
+    <string name="searching_movies">Procurando filmes...</string>
+    <string name="found_one_movie">Encontramos %1$s filme.</string>
+    <string name="found_many_movies">Encontramos %1$s filmes.</string>
+    <string name="content_description">X</string>
 </resources>

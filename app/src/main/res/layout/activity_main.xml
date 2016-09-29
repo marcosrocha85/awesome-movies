@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -8,29 +8,20 @@
         android:fitsSystemWindows="true"
         tools:context=".activities.MainActivity">
 
-    <android.support.v7.widget.RecyclerView
+    <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/main_fav_list">
-    </android.support.v7.widget.RecyclerView>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/main_tv_no_movies"
-            android:text="Você não possui filmes favoritos."
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"/>
+            android:id="@+id/main_relative_movies"/>
 
     <android.support.design.widget.FloatingActionButton
             android:id="@+id/main_fab_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:backgroundTint="#006699"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
             android:layout_marginBottom="@dimen/fab_margin"
-            android:layout_marginRight="@dimen/fab_margin"/>
-</RelativeLayout>
+            android:layout_marginRight="@dimen/fab_margin"
+            android:layout_gravity="bottom|right"
+            app:layout_anchor="@id/main_relative_movies"
+            app:layout_anchorGravity="bottom|right|end"
+            app:layout_behavior="net.marcosrocha.awesomemovies.activities.ScrollAwareFABBehavior"
+            android:clickable="true"/>
+</android.support.design.widget.CoordinatorLayout>

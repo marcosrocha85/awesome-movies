@@ -5,32 +5,35 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.IconicsDrawable;
 import net.marcosrocha.awesomemovies.R;
 import net.marcosrocha.awesomemovies.models.Movie;
 import net.marcosrocha.awesomemovies.presenters.MainActivityPresenter;
+import net.marcosrocha.awesomemovies.presenters.MovieListFragmentPresenter;
+import net.marcosrocha.awesomemovies.presenters.SearchPresenter;
+import net.marcosrocha.awesomemovies.utils.MovieListHolderFatoryMethod.InstanceOfType;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by marcos.rocha on 9/27/16.
  */
 public class MainActivity extends AppCompatActivity {
-    private List<Movie> mList;
     private MainActivityPresenter presenter;
-    private MainActivityAdapter mAdapter;
-    private LinearLayoutManager mManager;
+    private MovieListFragmentPresenter fragmentPresenter;
+    private MovieListFragment mFragment;
 
     @BindView(R.id.main_fab_search)
     FloatingActionButton fabSearch;
-    @BindView(R.id.main_fav_list)
-    RecyclerView mRecyclerView;
+    @OnClick(R.id.main_fab_search)
+    protected void fabSearchOnClick(View view) {
+        SearchPresenter.startActivity(this);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,22 +41,29 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        this.presenter = new MainActivityPresenter();
         setupFloatingActionButton();
-        setupAdapter();
+        createFragment();
     }
 
-    private void setupAdapter() {
-        this.mList = new ArrayList<>();
-        this.mList.add(new Movie("Back To The Future", "tt0088763", true));
-        this.mList.add(new Movie("Terminator II", "tt0088764", true));
-        this.mList.add(new Movie("X-Man Origins: Wolverine", "tt0088765", true));
-        this.mRecyclerView.setHasFixedSize(true);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadFavorites();
+    }
 
-        this.mManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mRecyclerView.setLayoutManager(this.mManager);
+    private void loadFavorites() {
+        List<Movie> movies = this.presenter.getFromRealm();
+        this.mFragment.setMovies(movies);
+    }
 
-        this.mAdapter = new MainActivityAdapter(this, this.mList);
-        this.mRecyclerView.setAdapter(this.mAdapter);
+    private void createFragment() {
+        this.fragmentPresenter = new MovieListFragmentPresenter(
+                this,
+                R.id.main_relative_movies,
+                R.layout.fragment_movie_favorite
+        );
+        this.mFragment = this.fragmentPresenter.createFragment(InstanceOfType.FAVORITES);
     }
 
     private void setupFloatingActionButton() {

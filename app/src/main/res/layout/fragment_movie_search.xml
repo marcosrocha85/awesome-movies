@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+    <ImageView
+            android:layout_width="@dimen/movie_thumb_width"
+            android:layout_height="@dimen/movie_thumb_height"
+            android:id="@+id/fragment_movie_thumb"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="As Loucas Aventuras de James West"
+            android:id="@+id/fragment_movie_title"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/default72dp"
+            android:layout_marginStart="@dimen/default16dp"
+            android:layout_toEndOf="@+id/fragment_movie_thumb"
+            android:lines="2"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:layout_alignBottom="@+id/fragment_movie_thumb"/>
+    <TextView
+            android:layout_width="@dimen/rating_size"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Ano"
+            android:id="@+id/fragment_movie_rating_label"
+            android:textAlignment="center"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true" android:layout_marginRight="@dimen/default2dp"/>
+    <ImageView
+            android:layout_width="@dimen/star_width"
+            android:layout_height="@dimen/start_height"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/fragment_movie_favorite"
+            android:layout_alignBottom="@+id/fragment_movie_thumb"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:textAlignment="center" android:layout_marginRight="@dimen/default2dp"/>
+    <TextView
+            android:layout_width="@dimen/rating_size"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="2000"
+            android:id="@+id/fragment_movie_year"
+            android:textAlignment="center"
+            android:layout_above="@id/fragment_movie_favorite"
+            android:layout_alignParentEnd="true"/>
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/default4dp"
+            android:layout_below="@id/fragment_movie_thumb"
+            android:background="#DDDDDD"/>
+</RelativeLayout>

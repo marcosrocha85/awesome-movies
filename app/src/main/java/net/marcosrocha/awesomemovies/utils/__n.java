@@ -1,4 +1,4 @@
-package net.marcosrocha.awesomemovies.util;
+package net.marcosrocha.awesomemovies.utils;
 
 import android.content.Context;
 

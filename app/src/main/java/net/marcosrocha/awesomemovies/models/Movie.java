@@ -1,46 +1,72 @@
 package net.marcosrocha.awesomemovies.models;
 
+import com.google.gson.annotations.SerializedName;
+import io.realm.Realm;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by marcos.rocha on 9/27/16.
  */
 public class Movie extends RealmObject {
     private String id;
+    private boolean favorite;
+
+    @SerializedName("imdbID")
     private String imdbId;
+    @SerializedName("Title")
     private String title;
-    private int year;
+    @SerializedName("Year")
+    private String year;
+    @SerializedName("Rated")
     private String rated;
+    @SerializedName("Released")
     private Date released;
+    @SerializedName("Runtime")
     private int runtime;
+    @SerializedName("Genre")
     private String genre;
+    @SerializedName("Director")
     private String director;
+    @SerializedName("Writer")
     private String writer;
+    @SerializedName("Actors")
     private String actors;
+    @SerializedName("Plot")
     private String plot;
+    @SerializedName("Language")
     private String language;
+    @SerializedName("Country")
     private String country;
+    @SerializedName("Awards")
     private String awards;
+    @SerializedName("Poster")
     private String poster;
+    @SerializedName("Metascore")
     private int metaScore;
+    @SerializedName("imdbRating")
     private double imdbRating;
+    @SerializedName("imdbVotes")
     private long imdbVotes;
+    @SerializedName("Type")
     private String type;
+    @SerializedName("Response")
     private boolean response;
+    @SerializedName("Error")
     private String error;
 
     public Movie() {}
 
-    public Movie(String title, boolean response) {
-        this(title, "", response);
-    }
-
-    public Movie(String title, String imdbId, boolean response) {
-        this.imdbId = imdbId;
+    public Movie(String title, String year, String imdbId, String type, String poster) {
         this.title = title;
-        this.response = response;
+        this.year = year;
+        this.imdbId = imdbId;
+        this.type = type;
+        this.poster = poster;
     }
 
     public String getId() {
@@ -59,11 +85,11 @@ public class Movie extends RealmObject {
         this.title = title;
     }
 
-    public int getYear() {
+    public String getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public void setYear(String year) {
         this.year = year;
     }
 
@@ -163,11 +189,11 @@ public class Movie extends RealmObject {
         this.poster = poster;
     }
 
-    public int getMetaScore() {
+    public int getMetascore() {
         return metaScore;
     }
 
-    public void setMetaScore(int metaScore) {
+    public void setMetascore(int metaScore) {
         this.metaScore = metaScore;
     }
 
@@ -217,5 +243,47 @@ public class Movie extends RealmObject {
 
     public void setError(String error) {
         this.error = error;
+    }
+
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+
+    public static List<Movie> findAll() {
+        Realm realm = Realm.getDefaultInstance();
+        List<Movie> listAux = new ArrayList<>();
+
+        RealmResults<Movie> items = realm.where(Movie.class).findAll();
+        for (Movie itemRow : items) {
+            Movie item = new Movie();
+            item.setTitle(itemRow.getTitle());
+            item.setYear(itemRow.getYear());
+            item.setRated(itemRow.getRated());
+            item.setReleased(itemRow.getReleased());
+            item.setRuntime(itemRow.getRuntime());
+            item.setGenre(itemRow.getGenre());
+            item.setDirector(itemRow.getDirector());
+            item.setWriter(itemRow.getWriter());
+            item.setActors(itemRow.getActors());
+            item.setPlot(itemRow.getPlot());
+            item.setLanguage(itemRow.getLanguage());
+            item.setCountry(itemRow.getCountry());
+            item.setAwards(itemRow.getAwards());
+            item.setPoster(itemRow.getPoster());
+            item.setMetascore(itemRow.getMetascore());
+            item.setImdbRating(itemRow.getImdbRating());
+            item.setImdbVotes(itemRow.getImdbVotes());
+            item.setImdbId(itemRow.getImdbId());
+            item.setType(itemRow.getType());
+            item.setFavorite(itemRow.isFavorite());
+
+            listAux.add(item);
+        }
+
+        return listAux;
     }
 }

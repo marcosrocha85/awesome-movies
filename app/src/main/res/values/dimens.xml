@@ -10,4 +10,8 @@
     <dimen name="rating_size">56dp</dimen>
     <dimen name="default2dp">2dp</dimen>
     <dimen name="default4dp">4dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="default24dp">24dp</dimen>
 </resources>
