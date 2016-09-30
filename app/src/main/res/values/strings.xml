@@ -7,4 +7,18 @@
     <string name="found_one_movie">Encontramos %1$s filme.</string>
     <string name="found_many_movies">Encontramos %1$s filmes.</string>
     <string name="content_description">X</string>
+    <string name="detail_actors">Atores:</string>
+    <string name="director">Diretor:</string>
+    <string name="genre">Gênero:</string>
+    <string name="language">Idioma:</string>
+    <string name="country">País:</string>
+    <string name="runtime">Duração:</string>
+    <string name="rated">Classificação:</string>
+    <string name="released">Lançamento:</string>
+    <string name="year">Ano:</string>
+    <string name="type">Tipo:</string>
+    <string name="metascore">Avaliação:</string>
+    <string name="detail_writer">Escritor:</string>
+    <string name="detail_awards">Prêmios:</string>
+    <string name="imdb_rating">Avaliação IMDb (%1$.2f):</string>
 </resources>

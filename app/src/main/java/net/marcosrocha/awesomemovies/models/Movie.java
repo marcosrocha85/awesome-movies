@@ -5,6 +5,8 @@ import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 
+import java.io.Serializable;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,9 +14,13 @@ import java.util.List;
 /**
  * Created by marcos.rocha on 9/27/16.
  */
-public class Movie extends RealmObject {
+public class Movie extends RealmObject implements Serializable {
     private String id;
     private boolean favorite;
+    private Date released_date;
+    private int run_time;
+    private int meta_score;
+    private long imdb_votes;
 
     @SerializedName("imdbID")
     private String imdbId;
@@ -25,9 +31,9 @@ public class Movie extends RealmObject {
     @SerializedName("Rated")
     private String rated;
     @SerializedName("Released")
-    private Date released;
+    private String released;
     @SerializedName("Runtime")
-    private int runtime;
+    private String runtime;
     @SerializedName("Genre")
     private String genre;
     @SerializedName("Director")
@@ -47,11 +53,11 @@ public class Movie extends RealmObject {
     @SerializedName("Poster")
     private String poster;
     @SerializedName("Metascore")
-    private int metaScore;
+    private String metaScore;
     @SerializedName("imdbRating")
     private double imdbRating;
     @SerializedName("imdbVotes")
-    private long imdbVotes;
+    private String imdbVotes;
     @SerializedName("Type")
     private String type;
     @SerializedName("Response")
@@ -101,20 +107,41 @@ public class Movie extends RealmObject {
         this.rated = rated;
     }
 
-    public Date getReleased() {
+    public Date getReleased_date() {
+        return released_date;
+    }
+
+    public void setReleased_date(Date released_date) {
+        this.released_date = released_date;
+    }
+
+    public String getReleased() {
         return released;
     }
 
-    public void setReleased(Date released) {
-        this.released = released;
+    public void setReleased(String released) {
+        String[] months = new String[] {"Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+        int[] intMonths = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+        for (int i = 0; i <= months.length; i++) {
+            released = released.replace(" " + months[i] + " ", Integer.toString(intMonths[i]));
+        }
+
+        try {
+            setReleased_date(DateFormat.getInstance().parse(released));
+        } catch (Exception e) {
+
+        }
     }
 
-    public int getRuntime() {
+    public String getRuntime() {
         return runtime;
     }
 
-    public void setRuntime(int runtime) {
+    public void setRuntime(String runtime) {
         this.runtime = runtime;
+
+        runtime = runtime.replaceAll("\\w|\\s", "");
+        setRun_time(Integer.parseInt(runtime));
     }
 
     public String getGenre() {
@@ -189,12 +216,16 @@ public class Movie extends RealmObject {
         this.poster = poster;
     }
 
-    public int getMetascore() {
+    public String getMetascore() {
         return metaScore;
     }
 
-    public void setMetascore(int metaScore) {
+    public void setMetascore(String metaScore) {
         this.metaScore = metaScore;
+
+        metaScore = metaScore.replaceAll("\\w|\\s", "");
+
+        setMeta_score(Integer.parseInt(metaScore));
     }
 
     public double getImdbRating() {
@@ -205,12 +236,14 @@ public class Movie extends RealmObject {
         this.imdbRating = imdbRating;
     }
 
-    public long getImdbVotes() {
+    public String getImdbVotes() {
         return imdbVotes;
     }
 
-    public void setImdbVotes(long imdbVotes) {
+    public void setImdbVotes(String imdbVotes) {
         this.imdbVotes = imdbVotes;
+        imdbVotes = imdbVotes.replace(",", "");
+        setImdb_votes(Long.parseLong(imdbVotes));
     }
 
     public String getImdbId() {
@@ -245,12 +278,36 @@ public class Movie extends RealmObject {
         this.error = error;
     }
 
+    public int getRun_time() {
+        return run_time;
+    }
+
+    public void setRun_time(int run_time) {
+        this.run_time = run_time;
+    }
+
     public boolean isFavorite() {
-        return favorite;
+        return favorite && (id != null);
     }
 
     public void setFavorite(boolean favorite) {
         this.favorite = favorite;
+    }
+
+    public int getMeta_score() {
+        return meta_score;
+    }
+
+    public void setMeta_score(int meta_score) {
+        this.meta_score = meta_score;
+    }
+
+    public long getImdb_votes() {
+        return imdb_votes;
+    }
+
+    public void setImdb_votes(long imdb_votes) {
+        this.imdb_votes = imdb_votes;
     }
 
     public static List<Movie> findAll() {

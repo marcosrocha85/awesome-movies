@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 import net.marcosrocha.awesomemovies.R;
 import net.marcosrocha.awesomemovies.models.Movie;
 import net.marcosrocha.awesomemovies.presenters.MovieDetailPresenter;
+import net.marcosrocha.awesomemovies.presenters.MovieRealmPresenter;
 import net.marcosrocha.awesomemovies.protocols.OnClickListenerProtected;
 import net.marcosrocha.awesomemovies.utils.MovieListHolderFatoryMethod.InstanceOfType;
 
@@ -86,8 +87,17 @@ public class MovieListFragment extends Fragment implements OnClickListenerProtec
 
     @Override
     public void onClickListener(View view, int position) {
-        Toast.makeText(this.getContext(), "Clicou no item " + position, Toast.LENGTH_SHORT).show();
-        MovieDetailActivity.navigate(this.activity, view, mList.get(position));
+        MovieDetailPresenter.startActivity(this.activity, view, mList.get(position));
+    }
+
+    @Override
+    public void onStarClickListener(View view, int position) {
+        Movie movie = mList.get(position);
+        if (MovieRealmPresenter.isMovieInRealm(movie)) {
+            MovieRealmPresenter.removeFromDatabase(movie);
+        } else {
+            MovieRealmPresenter.addToDatabase(movie);
+        }
     }
 
     public void setMovies(List<Movie> movies) {

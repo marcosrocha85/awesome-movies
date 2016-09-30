@@ -14,5 +14,5 @@ public interface OmdbApiService {
     Call<MovieSearch> search(@Query("s") String title);
 
     @GET("/")
-    Call<Movie> details(@Query("t") String title);
+    Call<Movie> details(@Query("i") String title);
 }

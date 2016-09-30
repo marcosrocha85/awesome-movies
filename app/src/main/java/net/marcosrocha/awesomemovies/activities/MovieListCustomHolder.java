@@ -29,6 +29,7 @@ public class MovieListCustomHolder extends RecyclerView.ViewHolder implements Vi
         super(itemView);
         ButterKnife.bind(this, itemView);
         itemView.setOnClickListener(this);
+        favorite.setOnClickListener(this);
     }
 
     public void setFavorite(boolean isFavorite) {
@@ -50,7 +51,9 @@ public class MovieListCustomHolder extends RecyclerView.ViewHolder implements Vi
 
     @Override
     public void onClick(View view) {
-        if (this.mClickListener != null) {
+        if (view instanceof ImageView) {
+            this.mClickListener.onStarClickListener(view, getAdapterPosition());
+        } else {
             this.mClickListener.onClickListener(view, getAdapterPosition());
         }
     }

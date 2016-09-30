@@ -7,4 +7,5 @@ import android.view.View;
  */
 public interface OnClickListenerProtected {
     void onClickListener(View view, int position);
+    void onStarClickListener(View view, int position);
 }

@@ -2,6 +2,7 @@
 <android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
@@ -24,7 +25,7 @@
                 android:fitsSystemWindows="true">
 
             <ImageView
-                    android:id="@+id/image"
+                    android:id="@+id/detail_movie_image"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
@@ -49,32 +50,169 @@
             android:clipToPadding="false"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-                <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
+            <TextView
+                    android:id="@+id/detail_movie_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
+
+            <TextView
+                    android:id="@+id/detail_movie_plot"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/imdb_rating"
+                    android:id="@+id/detail_movie_rating_label"/>
+            <RatingBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/detail_movie_rating_bar"
+                    android:numStars="10"
+                    android:rating="5"
+                    android:clickable="false"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_actors"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/detail_movie_actors"
+                    style="@style/Base.TextAppearance.AppCompat.Medium"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_writer"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/detail_movie_writer"
+                    style="@style/Base.TextAppearance.AppCompat.Medium"/>
+            <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:measureWithLargestChild="false"
+                    android:stretchColumns="1"
+                    android:shrinkColumns="0">
+                <TableRow android:measureWithLargestChild="false">
                     <TextView
-                            android:id="@+id/title"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
-
+                            android:text="@string/type"/>
                     <TextView
-                            android:id="@+id/description"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
-
-                </LinearLayout>
+                            android:id="@+id/detail_movie_type"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/metascore"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/detail_movie_metascore"/>
+                </TableRow>
+                <TableRow android:measureWithLargestChild="false">
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/runtime"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/detail_movie_runtime"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/rated"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/detail_movie_rated"/>
+                </TableRow>
+                <TableRow android:measureWithLargestChild="false">
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/released"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/detail_movie_released"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/year"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/detail_movie_year"/>
+                </TableRow>
+                <TableRow android:measureWithLargestChild="false">
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/director"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/detail_movie_director"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/genre"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/detail_movie_genre"/>
+                </TableRow>
+                <TableRow android:measureWithLargestChild="false">
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/language"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/detail_movie_language"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/country"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/detail_movie_country"/>
+                </TableRow>
+            </TableLayout>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_awards"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/detail_movie_awards"
+                    style="@style/Base.TextAppearance.AppCompat.Medium"/>
+        </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
+            android:id="@+id/fab_movie_favorite"
             app:layout_anchor="@id/app_bar_layout"
             app:layout_anchorGravity="bottom|right|end"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/default16dp"
+            android:layout_marginRight="@dimen/default16dp"/>
 
 </android.support.design.widget.CoordinatorLayout>
