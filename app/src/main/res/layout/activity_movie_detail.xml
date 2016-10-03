@@ -82,7 +82,8 @@
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/detail_actors"/>
+                    android:text="@string/detail_actors"
+                    android:layout_marginTop="@dimen/default16dp"/>
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -92,7 +93,8 @@
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/detail_writer"/>
+                    android:text="@string/detail_writer"
+                    android:layout_marginTop="@dimen/default16dp"/>
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -102,7 +104,8 @@
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/detail_awards"/>
+                    android:text="@string/detail_awards"
+                    android:layout_marginTop="@dimen/default16dp"/>
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -114,7 +117,8 @@
                     android:layout_height="wrap_content"
                     android:measureWithLargestChild="false"
                     android:stretchColumns="1"
-                    android:shrinkColumns="0">
+                    android:shrinkColumns="0"
+                    android:layout_marginTop="@dimen/default16dp">
                 <TableRow android:measureWithLargestChild="false">
                     <TextView
                             android:layout_width="wrap_content"

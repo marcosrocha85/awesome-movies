@@ -22,7 +22,12 @@
             android:lines="2"
             android:ellipsize="end"
             android:gravity="center_vertical"
-            android:layout_alignBottom="@+id/fragment_movie_thumb"/>
+            android:paddingBottom="@dimen/default2dp"
+            android:layout_alignBottom="@+id/fragment_movie_thumb"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/default72dp"
+            android:layout_marginLeft="@dimen/default16dp"
+            android:layout_toRightOf="@+id/fragment_movie_thumb"/>
     <TextView
             android:layout_width="@dimen/rating_size"
             android:layout_height="wrap_content"

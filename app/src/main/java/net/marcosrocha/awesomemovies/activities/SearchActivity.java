@@ -32,6 +32,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import net.marcosrocha.awesomemovies.utils.MovieListHolderFatoryMethod.InstanceOfType;
+import rx.Observer;
 
 import static net.marcosrocha.awesomemovies.activities.MovieListFragment.DETAILED_MOVIE;
 
@@ -57,32 +58,33 @@ public class SearchActivity extends AppCompatActivity {
         String searchTerm = searchEdit.getText().toString();
         final AppCompatActivity self = this;
         final AlertDialog progress = ProgressDialogHelper.show(this, R.string.search, R.string.searching_movies);
-        OmdbService.search(searchTerm, new Callback<MovieSearch>() {
+        OmdbService.search(searchTerm, new Observer<MovieSearch>() {
             @Override
-            public void onResponse(Call<MovieSearch> call, Response<MovieSearch> response) {
+            public void onCompleted() {
                 progress.dismiss();
-                if (!response.isSuccessful()) {
-                    Log.d("onResponse", "Not Successful");
-                }
+            }
 
-                if (response.body().getResponse()) {
-                    mFragment.setMovies(response.body().getSearch());
+            @Override
+            public void onError(Throwable e) {
+                progress.dismiss();
+            }
+
+            @Override
+            public void onNext(MovieSearch movieSearch) {
+                progress.dismiss();
+                if (movieSearch.getResponse()) {
+                    mFragment.setMovies(movieSearch.getSearch());
                     Toast.makeText(
                             self.getBaseContext(),
                             __n.get(self,
-                                    response.body().getSearch().size(),
+                                    movieSearch.getSearch().size(),
                                     R.string.found_one_movie,
                                     R.string.found_many_movies
                             ),
                             Toast.LENGTH_SHORT).show();
                 } else {
-                    Log.d("onResponse", "Not getResponse");
+                    Toast.makeText(self.getBaseContext(), movieSearch.getError(), Toast.LENGTH_SHORT).show();
                 }
-            }
-
-            @Override
-            public void onFailure(Call<MovieSearch> call, Throwable t) {
-                progress.dismiss();
             }
         });
     }

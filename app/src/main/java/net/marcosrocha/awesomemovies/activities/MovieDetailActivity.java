@@ -42,6 +42,8 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Observable;
+import rx.Observer;
 
 import java.io.Serializable;
 
@@ -175,20 +177,29 @@ public class MovieDetailActivity extends AppCompatActivity {
         collapsingToolbarLayout.setTitle(itemTitle);
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
-        Picasso.with(this).load(movie.getPoster()).into(movieImage, new Callback() {
-            @Override public void onSuccess() {
-                Bitmap bitmap = ((BitmapDrawable) movieImage.getDrawable()).getBitmap();
-                Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                    public void onGenerated(Palette palette) {
-                        applyPalette(palette);
+        if (movie.getPoster().equals("N/A")) {
+            Picasso.with(this)
+                    .load(R.drawable.no_photo)
+                    .into(movieImage);
+            return;
+        }
+        Picasso.with(this)
+                .load(movie.getPoster())
+                .error(R.drawable.no_photo)
+                .into(movieImage, new Callback() {
+                    @Override public void onSuccess() {
+                        Bitmap bitmap = ((BitmapDrawable) movieImage.getDrawable()).getBitmap();
+                        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                            public void onGenerated(Palette palette) {
+                                applyPalette(palette);
+                            }
+                        });
+                    }
+
+                    @Override public void onError() {
+
                     }
                 });
-            }
-
-            @Override public void onError() {
-
-            }
-        });
     }
 
     private void updateFabButtonImage() {
@@ -208,18 +219,21 @@ public class MovieDetailActivity extends AppCompatActivity {
     private void loadMovieData() {
         if (!this.presenter.hasMovieInDatabase(movie)) {
             final MovieDetailActivity self = this;
-            OmdbService.details(movie.getImdbId(), new retrofit2.Callback<Movie>() {
+            OmdbService.details(movie.getImdbId(), new Observer<Movie>() {
                 @Override
-                public void onResponse(Call<Movie> call, Response<Movie> response) {
-                    movie = response.body();
-                    fillMovieData();
+                public void onCompleted() {}
+
+                @Override
+                public void onError(Throwable e) {
+                    Toast.makeText(self, "Erro ao carregar detalhes do filme.", Toast.LENGTH_SHORT).show();
+                    Log.d("loadMovieData", "Erro ao carregar detalhes do filme.");
+                    e.printStackTrace();
                 }
 
                 @Override
-                public void onFailure(Call<Movie> call, Throwable t) {
-                    Toast.makeText(self, "Erro ao carregar detalhes do filme.", Toast.LENGTH_SHORT).show();
-                    Log.d("loadMovieData", "Erro ao carregar detalhes do filme.");
-                    t.printStackTrace();
+                public void onNext(Movie movie) {
+                    self.movie = movie;
+                    fillMovieData();
                 }
             });
         } else {

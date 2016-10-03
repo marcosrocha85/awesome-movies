@@ -41,6 +41,7 @@ public class MovieListFavoriteHolder extends MovieListCustomHolder {
                 .load(movie.getPoster())
                 .resize(imageWidth, imageHeight)
                 .centerCrop()
+                .error(R.drawable.no_photo)
                 .into(this.thumb);
     }
 }

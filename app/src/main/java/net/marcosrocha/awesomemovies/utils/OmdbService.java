@@ -5,10 +5,14 @@ import com.google.gson.GsonBuilder;
 import net.marcosrocha.awesomemovies.models.Movie;
 import net.marcosrocha.awesomemovies.models.MovieSearch;
 import net.marcosrocha.awesomemovies.protocols.OmdbApiService;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Observable;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by marcos.rocha on 10/3/16.
@@ -21,20 +25,27 @@ public class OmdbService {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
 
         return retrofit.create(OmdbApiService.class);
     }
 
-    public static void search(String title, Callback<MovieSearch> searchCallback) {
+    public static Subscription search(String title, Observer<MovieSearch> searchCallback) {
         OmdbApiService service = buildRetrofit();
-        Call<MovieSearch> search = service.search(title);
-        search.enqueue(searchCallback);
+        Observable<MovieSearch> search = service.search(title);
+        return search
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(searchCallback);
     }
 
-    public static void details(String imdbID, Callback<Movie> movieCallback) {
+    public static Subscription details(String imdbID, Observer<Movie> movieCallback) {
         OmdbApiService service = buildRetrofit();
-        Call<Movie> movieCall = service.details(imdbID);
-        movieCall.enqueue(movieCallback);
+        Observable<Movie> movieCall = service.details(imdbID);
+        return movieCall
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(movieCallback);
     }
 }

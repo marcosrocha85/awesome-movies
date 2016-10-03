@@ -13,6 +13,7 @@ import net.marcosrocha.awesomemovies.utils.OmdbService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Observer;
 
 /**
  * Created by marcos.rocha on 9/29/16.
@@ -93,28 +94,28 @@ public class MovieListFragmentPresenter {
         boolean canAddToDatabase = true;
         if (movie.getId() == null || TextUtils.isEmpty(movie.getId())) {
             canAddToDatabase = false;
-            OmdbService.details(movie.getImdbId(), new Callback<Movie>() {
+            OmdbService.details(movie.getImdbId(), new Observer<Movie>() {
                 @Override
-                public void onResponse(Call<Movie> call, Response<Movie> response) {
-                    if (!response.isSuccessful()) {
-                        onFailure(call, new Exception(response.message()));
-                    }
+                public void onCompleted() {}
 
-                    movie.assignTo(response.body());
-                    movie.setFavorite(true);
-                    MovieRealmPresenter.addToDatabase(movie);
-                    callback.addToDatabase(true, null);
+                @Override
+                public void onError(Throwable e) {
+                    callback.addToDatabase(false, e);
                 }
 
                 @Override
-                public void onFailure(Call<Movie> call, Throwable t) {
-                    callback.addToDatabase(false, t);
+                public void onNext(Movie movie) {
+                    movie.assignTo(movie);
+                    movie.setFavorite(true);
+                    MovieRealmPresenter.addToDatabase(movie);
+                    callback.addToDatabase(true, null);
                 }
             });
         }
 
         if (canAddToDatabase) {
             MovieRealmPresenter.addToDatabase(movie);
+            callback.addToDatabase(true, null);
         }
     }
 }
