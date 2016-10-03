@@ -1,12 +1,16 @@
 package net.marcosrocha.awesomemovies.models;
 
+import android.text.TextUtils;
 import com.google.gson.annotations.SerializedName;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
+import io.realm.annotations.PrimaryKey;
+import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,9 +23,9 @@ public class Movie extends RealmObject implements Serializable {
     private boolean favorite;
     private Date released_date;
     private int run_time;
-    private int meta_score;
     private long imdb_votes;
 
+    @PrimaryKey
     @SerializedName("imdbID")
     private String imdbId;
     @SerializedName("Title")
@@ -120,14 +124,19 @@ public class Movie extends RealmObject implements Serializable {
     }
 
     public void setReleased(String released) {
-        String[] months = new String[] {"Jan", "Feb", "Mar", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+        this.released = released;
+        if (released == null || TextUtils.isEmpty(released)) {
+            return;
+        }
+        String[] months = new String[] {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
         int[] intMonths = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-        for (int i = 0; i <= months.length; i++) {
-            released = released.replace(" " + months[i] + " ", Integer.toString(intMonths[i]));
+        for (int i = 0; i < months.length; i++) {
+            released = released.replace(" " + months[i] + " ", "/" + Integer.toString(intMonths[i]) + "/");
         }
 
         try {
-            setReleased_date(DateFormat.getInstance().parse(released));
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+            setReleased_date(df.parse(released));
         } catch (Exception e) {
 
         }
@@ -140,7 +149,7 @@ public class Movie extends RealmObject implements Serializable {
     public void setRuntime(String runtime) {
         this.runtime = runtime;
 
-        runtime = runtime.replaceAll("\\w|\\s", "");
+        runtime = runtime.replaceAll("\\D", "");
         setRun_time(Integer.parseInt(runtime));
     }
 
@@ -222,10 +231,6 @@ public class Movie extends RealmObject implements Serializable {
 
     public void setMetascore(String metaScore) {
         this.metaScore = metaScore;
-
-        metaScore = metaScore.replaceAll("\\w|\\s", "");
-
-        setMeta_score(Integer.parseInt(metaScore));
     }
 
     public double getImdbRating() {
@@ -294,14 +299,6 @@ public class Movie extends RealmObject implements Serializable {
         this.favorite = favorite;
     }
 
-    public int getMeta_score() {
-        return meta_score;
-    }
-
-    public void setMeta_score(int meta_score) {
-        this.meta_score = meta_score;
-    }
-
     public long getImdb_votes() {
         return imdb_votes;
     }
@@ -317,30 +314,35 @@ public class Movie extends RealmObject implements Serializable {
         RealmResults<Movie> items = realm.where(Movie.class).findAll();
         for (Movie itemRow : items) {
             Movie item = new Movie();
-            item.setTitle(itemRow.getTitle());
-            item.setYear(itemRow.getYear());
-            item.setRated(itemRow.getRated());
-            item.setReleased(itemRow.getReleased());
-            item.setRuntime(itemRow.getRuntime());
-            item.setGenre(itemRow.getGenre());
-            item.setDirector(itemRow.getDirector());
-            item.setWriter(itemRow.getWriter());
-            item.setActors(itemRow.getActors());
-            item.setPlot(itemRow.getPlot());
-            item.setLanguage(itemRow.getLanguage());
-            item.setCountry(itemRow.getCountry());
-            item.setAwards(itemRow.getAwards());
-            item.setPoster(itemRow.getPoster());
-            item.setMetascore(itemRow.getMetascore());
-            item.setImdbRating(itemRow.getImdbRating());
-            item.setImdbVotes(itemRow.getImdbVotes());
-            item.setImdbId(itemRow.getImdbId());
-            item.setType(itemRow.getType());
-            item.setFavorite(itemRow.isFavorite());
+            item.assignTo(itemRow);
 
             listAux.add(item);
         }
 
         return listAux;
+    }
+
+    public void assignTo(Movie sourceMovie) {
+        this.setId(sourceMovie.getId());
+        this.setTitle(sourceMovie.getTitle());
+        this.setYear(sourceMovie.getYear());
+        this.setRated(sourceMovie.getRated());
+        this.setReleased(sourceMovie.getReleased());
+        this.setRuntime(sourceMovie.getRuntime());
+        this.setGenre(sourceMovie.getGenre());
+        this.setDirector(sourceMovie.getDirector());
+        this.setWriter(sourceMovie.getWriter());
+        this.setActors(sourceMovie.getActors());
+        this.setPlot(sourceMovie.getPlot());
+        this.setLanguage(sourceMovie.getLanguage());
+        this.setCountry(sourceMovie.getCountry());
+        this.setAwards(sourceMovie.getAwards());
+        this.setPoster(sourceMovie.getPoster());
+        this.setMetascore(sourceMovie.getMetascore());
+        this.setImdbRating(sourceMovie.getImdbRating());
+        this.setImdbVotes(sourceMovie.getImdbVotes());
+        this.setImdbId(sourceMovie.getImdbId());
+        this.setType(sourceMovie.getType());
+        this.setFavorite(sourceMovie.isFavorite());
     }
 }

@@ -1,5 +1,6 @@
 package net.marcosrocha.awesomemovies.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,7 +17,7 @@ import butterknife.ButterKnife;
 import net.marcosrocha.awesomemovies.R;
 import net.marcosrocha.awesomemovies.models.Movie;
 import net.marcosrocha.awesomemovies.presenters.MovieDetailPresenter;
-import net.marcosrocha.awesomemovies.presenters.MovieRealmPresenter;
+import net.marcosrocha.awesomemovies.presenters.MovieListFragmentPresenter;
 import net.marcosrocha.awesomemovies.protocols.OnClickListenerProtected;
 import net.marcosrocha.awesomemovies.utils.MovieListHolderFatoryMethod.InstanceOfType;
 
@@ -34,6 +35,8 @@ public class MovieListFragment extends Fragment implements OnClickListenerProtec
     private int idLayout;
     private InstanceOfType instanceOfType;
     private AppCompatActivity activity;
+    private boolean shouldRemoveItemFromList;
+    public static final int DETAILED_MOVIE = 101;
     @BindView(R.id.main_tv_no_movies)
     TextView noMovies;
     @BindView(R.id.main_fav_list)
@@ -44,6 +47,7 @@ public class MovieListFragment extends Fragment implements OnClickListenerProtec
         fragment.instanceOfType = instanceOfType;
         fragment.idLayout = idLayout;
         fragment.activity = activity;
+        fragment.shouldRemoveItemFromList = false;
         return fragment;
     }
 
@@ -87,16 +91,46 @@ public class MovieListFragment extends Fragment implements OnClickListenerProtec
 
     @Override
     public void onClickListener(View view, int position) {
-        MovieDetailPresenter.startActivity(this.activity, view, mList.get(position));
+        MovieDetailPresenter.startActivity(this.activity, view, position, mList.get(position));
     }
 
     @Override
-    public void onStarClickListener(View view, int position) {
-        Movie movie = mList.get(position);
-        if (MovieRealmPresenter.isMovieInRealm(movie)) {
-            MovieRealmPresenter.removeFromDatabase(movie);
+    public void onStarClickListener(final View view, final int position) {
+        final Movie movie = mList.get(position);
+        final MovieListFragment self = this;
+        if (MovieListFragmentPresenter.isMovieInRealm(movie)) {
+            MovieListFragmentPresenter.removeFromDatabase(movie,
+                    new MovieListFragmentPresenter.RemoveFromDatabaseCallback() {
+                        @Override
+                        public void removeFromDatabase(boolean removed, Throwable error) {
+                            if (!removed) {
+                                Toast.makeText(self.getContext(), "Não foi possível remover da lista de favoritos.", Toast.LENGTH_SHORT).show();
+                                error.printStackTrace();
+                                return;
+                            }
+
+                            if (shouldRemoveItemFromList) {
+                                mList.remove(position);
+                                mAdapter.notifyItemRemoved(position);
+                                changeNoItemsVisibility();
+                            } else {
+                                movie.setFavorite(false);
+                                mAdapter.notifyItemChanged(position);
+                            }
+                        }
+                    });
         } else {
-            MovieRealmPresenter.addToDatabase(movie);
+            MovieListFragmentPresenter.addToDatabase(movie, new MovieListFragmentPresenter.AddToDatabaseCallback() {
+                @Override
+                public void addToDatabase(boolean movieAdded, Throwable error) {
+                    if (movieAdded) {
+                        movie.setFavorite(true);
+                        mAdapter.notifyItemChanged(position);
+                    } else {
+                        Toast.makeText(self.getContext(), "Erro ao adicionar aos favoritos.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
     }
 
@@ -113,5 +147,18 @@ public class MovieListFragment extends Fragment implements OnClickListenerProtec
 
     public void setCanDisplayNoMovies(boolean canDisplayNoMovies) {
         this.canDisplayNoMovies = canDisplayNoMovies;
+    }
+
+    public boolean isShouldRemoveItemFromList() {
+        return shouldRemoveItemFromList;
+    }
+
+    public void setShouldRemoveItemFromList(boolean shouldRemoveItemFromList) {
+        this.shouldRemoveItemFromList = shouldRemoveItemFromList;
+    }
+
+    public void updateMovie(int position, Movie movie) {
+        this.mList.get(position).assignTo(movie);
+        this.mAdapter.notifyItemChanged(position);
     }
 }

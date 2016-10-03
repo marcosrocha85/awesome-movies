@@ -1,8 +1,10 @@
 package net.marcosrocha.awesomemovies.activities;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,14 +37,17 @@ import net.marcosrocha.awesomemovies.models.Movie;
 import net.marcosrocha.awesomemovies.presenters.MovieDetailPresenter;
 import net.marcosrocha.awesomemovies.presenters.MovieRealmPresenter;
 import net.marcosrocha.awesomemovies.protocols.OmdbApiService;
+import net.marcosrocha.awesomemovies.utils.OmdbService;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import java.io.Serializable;
+
 public class MovieDetailActivity extends AppCompatActivity {
-    public static final String BASE_URL = "http://www.omdbapi.com/";
     public static final String EXTRA_IMAGE = "net.marcosrocha.awesomemovies.extraImage";
+    private static final double MAX_RATING = 10;
     private Movie movie;
     private MovieDetailPresenter presenter;
     @BindView(R.id.collapsing_toolbar)
@@ -86,11 +92,29 @@ public class MovieDetailActivity extends AppCompatActivity {
     FloatingActionButton fabFavorite;
     @OnClick(R.id.fab_movie_favorite)
     public void fabFavoriteOnClick(View view) {
-        if (MovieRealmPresenter.isMovieInRealm(movie)) {
-            MovieRealmPresenter.removeFromDatabase(movie);
+        Movie movieTemp = new Movie();
+        movieTemp.assignTo(movie);
+        if (MovieRealmPresenter.isMovieInRealm(movieTemp)) {
+            MovieRealmPresenter.removeFromDatabase(movieTemp);
+            movie = movieTemp;
+            movie.setFavorite(false);
         } else {
-            MovieRealmPresenter.addToDatabase(movie);
+            movieTemp.setFavorite(true);
+            MovieRealmPresenter.addToDatabase(movieTemp);
+            movie.setId(movie.getImdbId());
+            movie.setFavorite(true);
         }
+        updateFabButtonImage();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("movie", movie);
+
+        Intent intent = new Intent();
+        intent.putExtras(bundle);
+
+        setResult(
+                getIntent().getIntExtra("position", -1),
+                intent
+        );
     }
 
     public boolean loadMovieFromIntent() {
@@ -103,6 +127,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     @SuppressWarnings("ConstantConditions")
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setResult(-1);
         initActivityTransitions();
         setContentView(R.layout.activity_movie_detail);
         ButterKnife.bind(this);
@@ -129,7 +154,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         String itemTitle = movie.getTitle();
         movieTitle.setText(itemTitle);
         moviePlot.setText(movie.getPlot());
-        movieRatingBar.setRating((float) movie.getImdbRating());
+        float rating = (float) ((movie.getImdbRating() / MAX_RATING) * movieRatingBar.getNumStars());
+        movieRatingBar.setRating(rating);
         movieActors.setText(movie.getActors());
         movieWriter.setText(movie.getWriter());
         movieType.setText(movie.getType());
@@ -144,16 +170,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         movieLanguage.setText(movie.getLanguage());
         movieCountry.setText(movie.getCountry());
         movieAwards.setText(movie.getAwards());
-        FontAwesome.Icon fabIcon = FontAwesome.Icon.faw_star_o;
-        if (movie.isFavorite()) {
-            fabIcon = FontAwesome.Icon.faw_star;
-        }
-        fabFavorite.setImageDrawable(new IconicsDrawable(
-                this,
-                fabIcon
-            )
-                .sizeDp(24)
-        );
+        updateFabButtonImage();
 
         collapsingToolbarLayout.setTitle(itemTitle);
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
@@ -174,18 +191,24 @@ public class MovieDetailActivity extends AppCompatActivity {
         });
     }
 
+    private void updateFabButtonImage() {
+        FontAwesome.Icon fabIcon = FontAwesome.Icon.faw_star_o;
+        if (movie.isFavorite()) {
+            fabIcon = FontAwesome.Icon.faw_star;
+        }
+        fabFavorite.setImageDrawable(new IconicsDrawable(
+                        this,
+                        fabIcon
+                )
+                        .color(Color.WHITE)
+                        .sizeDp(24)
+        );
+    }
+
     private void loadMovieData() {
         if (!this.presenter.hasMovieInDatabase(movie)) {
-            Gson gson = new GsonBuilder().create();
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .build();
-
-            OmdbApiService service = retrofit.create(OmdbApiService.class);
-            Call<Movie> movieCall = service.details(movie.getImdbId());
             final MovieDetailActivity self = this;
-            movieCall.enqueue(new retrofit2.Callback<Movie>() {
+            OmdbService.details(movie.getImdbId(), new retrofit2.Callback<Movie>() {
                 @Override
                 public void onResponse(Call<Movie> call, Response<Movie> response) {
                     movie = response.body();
@@ -194,11 +217,13 @@ public class MovieDetailActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<Movie> call, Throwable t) {
-                    Toast.makeText(self, "Hááááá PAUUUUUU!!!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(self, "Erro ao carregar detalhes do filme.", Toast.LENGTH_SHORT).show();
+                    Log.d("loadMovieData", "Erro ao carregar detalhes do filme.");
                     t.printStackTrace();
                 }
             });
         } else {
+            movie = MovieRealmPresenter.getMovieByImdbID(movie.getImdbId());
             fillMovieData();
         }
     }

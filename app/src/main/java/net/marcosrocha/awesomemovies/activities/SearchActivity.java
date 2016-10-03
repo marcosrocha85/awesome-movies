@@ -1,6 +1,7 @@
 package net.marcosrocha.awesomemovies.activities;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -15,26 +16,26 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.IconicsDrawable;
 import net.marcosrocha.awesomemovies.R;
+import net.marcosrocha.awesomemovies.models.Movie;
 import net.marcosrocha.awesomemovies.models.MovieSearch;
+import net.marcosrocha.awesomemovies.presenters.MovieDetailPresenter;
 import net.marcosrocha.awesomemovies.presenters.MovieListFragmentPresenter;
+import net.marcosrocha.awesomemovies.presenters.MovieRealmPresenter;
 import net.marcosrocha.awesomemovies.presenters.SearchPresenter;
-import net.marcosrocha.awesomemovies.protocols.OmdbApiService;
+import net.marcosrocha.awesomemovies.utils.OmdbService;
 import net.marcosrocha.awesomemovies.utils.ProgressDialogHelper;
 import net.marcosrocha.awesomemovies.utils.__n;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import net.marcosrocha.awesomemovies.utils.MovieListHolderFatoryMethod.InstanceOfType;
 
+import static net.marcosrocha.awesomemovies.activities.MovieListFragment.DETAILED_MOVIE;
+
 public class SearchActivity extends AppCompatActivity {
-    public static final String BASE_URL = "http://www.omdbapi.com/";
     private SearchPresenter presenter;
     private MovieListFragmentPresenter fragmentPresenter;
     private MovieListFragment mFragment;
@@ -54,17 +55,9 @@ public class SearchActivity extends AppCompatActivity {
         }
 
         String searchTerm = searchEdit.getText().toString();
-        Gson gson = new GsonBuilder().create();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
-        OmdbApiService service = retrofit.create(OmdbApiService.class);
-        Call<MovieSearch> search = service.search(searchTerm);
         final AppCompatActivity self = this;
         final AlertDialog progress = ProgressDialogHelper.show(this, R.string.search, R.string.searching_movies);
-        search.enqueue(new Callback<MovieSearch>() {
+        OmdbService.search(searchTerm, new Callback<MovieSearch>() {
             @Override
             public void onResponse(Call<MovieSearch> call, Response<MovieSearch> response) {
                 progress.dismiss();
@@ -134,5 +127,16 @@ public class SearchActivity extends AppCompatActivity {
     private void setupSearchField() {
         searchText.setError(getString(R.string.search_criteria_required));
         searchText.setErrorEnabled(false);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == DETAILED_MOVIE) {
+            if (resultCode > -1) {
+                Movie movie = MovieDetailPresenter.getBundleAsMovie(data.getExtras());
+                this.mFragment.updateMovie(resultCode, movie);
+            }
+        }
     }
 }

@@ -11,20 +11,22 @@ import net.marcosrocha.awesomemovies.activities.MovieDetailActivity;
 import net.marcosrocha.awesomemovies.models.Movie;
 
 import static net.marcosrocha.awesomemovies.activities.MovieDetailActivity.EXTRA_IMAGE;
+import static net.marcosrocha.awesomemovies.activities.MovieListFragment.DETAILED_MOVIE;
 
 /**
  * Created by marcos.rocha on 9/29/16.
  */
 public class MovieDetailPresenter {
-    public static void startActivity(AppCompatActivity activity, View transitionImage, Movie movie) {
+    public static void startActivity(AppCompatActivity activity, View transitionImage, int position, Movie movie) {
         Bundle bundle = new Bundle();
         bundle.putSerializable("movie", movie);
+        bundle.putInt("position", position);
 
         Intent intent = new Intent(activity, MovieDetailActivity.class);
         intent.putExtras(bundle);
 
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, transitionImage, EXTRA_IMAGE);
-        ActivityCompat.startActivity(activity, intent, options.toBundle());
+        ActivityCompat.startActivityForResult(activity, intent, DETAILED_MOVIE, options.toBundle());
     }
 
     public static Movie getBundleAsMovie(Bundle bundle) {

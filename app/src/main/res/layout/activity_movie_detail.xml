@@ -48,24 +48,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:padding="@dimen/default16dp">
 
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-            <TextView
-                    android:id="@+id/detail_movie_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
-
-            <TextView
-                    android:id="@+id/detail_movie_plot"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -75,9 +64,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/detail_movie_rating_bar"
-                    android:numStars="10"
-                    android:rating="5"
-                    android:clickable="false"/>
+                    android:numStars="5"
+                    android:rating="0"
+                    android:isIndicator="true"
+                    android:layout_gravity="center"
+                    android:stepSize="0.1"/>
+            <TextView
+                    android:id="@+id/detail_movie_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Headline"/>
+            <TextView
+                    android:id="@+id/detail_movie_plot"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -86,7 +87,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/detail_movie_actors"
-                    style="@style/Base.TextAppearance.AppCompat.Medium"/>
+                    style="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/primary_text_light"/>
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -95,7 +97,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/detail_movie_writer"
-                    style="@style/Base.TextAppearance.AppCompat.Medium"/>
+                    style="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/primary_text_light"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail_awards"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/detail_movie_awards"
+                    style="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/primary_text_light"/>
             <TableLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -106,102 +119,133 @@
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/type"/>
+                            android:text="@string/type"
+                            android:paddingRight="@dimen/default16dp"
+                            android:paddingEnd="@dimen/default16dp"/>
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:id="@+id/detail_movie_type"/>
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/metascore"/>
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/detail_movie_metascore"/>
+                            android:id="@+id/detail_movie_type"
+                            android:textColor="@android:color/primary_text_light"/>
                 </TableRow>
                 <TableRow android:measureWithLargestChild="false">
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/runtime"/>
+                            android:text="@string/metascore"
+                            android:paddingRight="@dimen/default16dp"
+                            android:paddingEnd="@dimen/default16dp"/>
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:id="@+id/detail_movie_runtime"/>
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/rated"/>
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/detail_movie_rated"/>
+                            android:id="@+id/detail_movie_metascore"
+                            android:textColor="@android:color/primary_text_light"/>
                 </TableRow>
                 <TableRow android:measureWithLargestChild="false">
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/released"/>
+                            android:text="@string/runtime"
+                            android:paddingRight="@dimen/default16dp"
+                            android:paddingEnd="@dimen/default16dp"/>
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:id="@+id/detail_movie_released"/>
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/year"/>
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/detail_movie_year"/>
+                            android:id="@+id/detail_movie_runtime"
+                            android:textColor="@android:color/primary_text_light"/>
                 </TableRow>
                 <TableRow android:measureWithLargestChild="false">
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/director"/>
+                            android:text="@string/rated"
+                            android:paddingRight="@dimen/default16dp"
+                            android:paddingEnd="@dimen/default16dp"/>
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:id="@+id/detail_movie_director"/>
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/genre"/>
-                    <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/detail_movie_genre"/>
+                            android:id="@+id/detail_movie_rated"
+                            android:textColor="@android:color/primary_text_light"/>
                 </TableRow>
                 <TableRow android:measureWithLargestChild="false">
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/language"/>
+                            android:text="@string/released"
+                            android:paddingRight="@dimen/default16dp"
+                            android:paddingEnd="@dimen/default16dp"/>
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:id="@+id/detail_movie_language"/>
+                            android:id="@+id/detail_movie_released"
+                            android:textColor="@android:color/primary_text_light"/>
+                </TableRow>
+                <TableRow android:measureWithLargestChild="false">
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/country"/>
+                            android:text="@string/year"
+                            android:paddingRight="@dimen/default16dp"
+                            android:paddingEnd="@dimen/default16dp"/>
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:id="@+id/detail_movie_country"/>
+                            android:id="@+id/detail_movie_year"
+                            android:textColor="@android:color/primary_text_light"/>
+                </TableRow>
+                <TableRow android:measureWithLargestChild="false">
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/director"
+                            android:paddingRight="@dimen/default16dp"
+                            android:paddingEnd="@dimen/default16dp"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/detail_movie_director"
+                            android:textColor="@android:color/primary_text_light"/>
+                </TableRow>
+                <TableRow android:measureWithLargestChild="false">
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/genre"
+                            android:paddingRight="@dimen/default16dp"
+                            android:paddingEnd="@dimen/default16dp"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/detail_movie_genre"
+                            android:textColor="@android:color/primary_text_light"/>
+                </TableRow>
+                <TableRow android:measureWithLargestChild="false">
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/language"
+                            android:paddingRight="@dimen/default16dp"
+                            android:paddingEnd="@dimen/default16dp"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/detail_movie_language"
+                            android:textColor="@android:color/primary_text_light"/>
+                </TableRow>
+                <TableRow android:measureWithLargestChild="false">
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/country"
+                            android:paddingRight="@dimen/default16dp"
+                            android:paddingEnd="@dimen/default16dp"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/detail_movie_country"
+                    android:textColor="@android:color/primary_text_light"/>
                 </TableRow>
             </TableLayout>
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/detail_awards"/>
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/detail_movie_awards"
-                    style="@style/Base.TextAppearance.AppCompat.Medium"/>
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>

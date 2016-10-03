@@ -10,7 +10,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/search_text"
-            android:layout_marginRight="@dimen/default72dp">
+            android:layout_marginLeft="@dimen/default4dp"
+            android:layout_marginRight="@dimen/default72dp"
+            android:layout_marginStart="@dimen/default4dp"
+            android:layout_marginEnd="@dimen/default72dp"
+            android:layout_marginTop="@dimen/default4dp">
         <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -26,6 +30,10 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:id="@+id/search_button"
+            android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginRight="@dimen/default16dp"/>
+            android:layout_alignTop="@id/search_text"
+            android:layout_marginTop="@dimen/default4dp"
+            android:layout_marginRight="@dimen/default16dp"
+            android:layout_marginEnd="@dimen/default16dp"/>
 </RelativeLayout>

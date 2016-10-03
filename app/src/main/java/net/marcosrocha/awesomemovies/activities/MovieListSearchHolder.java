@@ -7,6 +7,7 @@ import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
 import net.marcosrocha.awesomemovies.R;
 import net.marcosrocha.awesomemovies.models.Movie;
+import net.marcosrocha.awesomemovies.presenters.MovieRealmPresenter;
 
 /**
  * Created by marcos.rocha on 9/27/16.
@@ -22,6 +23,13 @@ public class MovieListSearchHolder extends MovieListCustomHolder {
 
     public void setData(Movie movie) {
         super.setData(movie);
+
+        if (!movie.isFavorite()) {
+            Movie realmMovie = MovieRealmPresenter.getMovieByImdbID(movie.getImdbId());
+            if (realmMovie != null) {
+                movie = realmMovie;
+            }
+        }
 
         this.title.setText(movie.getTitle());
         this.year.setText(movie.getYear());

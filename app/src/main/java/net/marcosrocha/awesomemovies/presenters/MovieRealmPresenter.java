@@ -1,6 +1,5 @@
 package net.marcosrocha.awesomemovies.presenters;
 
-import android.text.TextUtils;
 import io.realm.Realm;
 import io.realm.RealmObject;
 import net.marcosrocha.awesomemovies.models.Movie;
@@ -10,7 +9,7 @@ import net.marcosrocha.awesomemovies.models.Movie;
  */
 public class MovieRealmPresenter {
     public static boolean isMovieInRealm(Movie movie) {
-        return !TextUtils.isEmpty(movie.getId());
+        return getMovieByImdbID(movie.getImdbId()) != null;
     }
 
     public static void addToDatabase(Movie movie) {
@@ -32,11 +31,15 @@ public class MovieRealmPresenter {
         return Realm.getDefaultInstance();
     }
 
-    public static void removeFromDatabase(Movie movie) {
+    public static Movie getMovieByImdbID(String imdbID) {
+        return getRealm().where(Movie.class).equalTo("id", imdbID).findFirst();
+    }
+
+    public static boolean removeFromDatabase(Movie movie) {
         Realm realm = getRealm();
 
-        if (!isMovieInRealm(movie)) {
-            movie = realm.where(Movie.class).equalTo("id", movie.getImdbId()).findFirst();
+        if (!movie.isValid() || !isMovieInRealm(movie)) {
+            movie = getMovieByImdbID(movie.getImdbId());
         }
 
         try {
@@ -45,8 +48,11 @@ public class MovieRealmPresenter {
             movie.deleteFromRealm();
 
             realm.commitTransaction();
+            return true;
         } catch (Exception e) {
             realm.cancelTransaction();
         }
+
+        return false;
     }
 }

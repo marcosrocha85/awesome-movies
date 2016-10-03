@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 R.layout.fragment_movie_favorite
         );
         this.mFragment = this.fragmentPresenter.createFragment(InstanceOfType.FAVORITES);
+        this.mFragment.setShouldRemoveItemFromList(true);
     }
 
     private void setupFloatingActionButton() {
