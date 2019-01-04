@@ -10,10 +10,9 @@ import net.marcosrocha.awesomemovies.activities.MovieListFragment;
 import net.marcosrocha.awesomemovies.models.Movie;
 import net.marcosrocha.awesomemovies.utils.MovieListHolderFatoryMethod.InstanceOfType;
 import net.marcosrocha.awesomemovies.utils.OmdbService;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import rx.Observer;
+
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by marcos.rocha on 9/29/16.
@@ -95,12 +94,20 @@ public class MovieListFragmentPresenter {
         if (movie.getId() == null || TextUtils.isEmpty(movie.getId())) {
             canAddToDatabase = false;
             OmdbService.details(movie.getImdbId(), new Observer<Movie>() {
-                @Override
-                public void onCompleted() {}
 
                 @Override
                 public void onError(Throwable e) {
                     callback.addToDatabase(false, e);
+                }
+
+                @Override
+                public void onComplete() {
+
+                }
+
+                @Override
+                public void onSubscribe(Disposable d) {
+
                 }
 
                 @Override

@@ -13,8 +13,8 @@ public class CustomApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        RealmConfiguration.Builder realmConfiguration = new RealmConfiguration.Builder(this)
+        Realm.init(this);
+        RealmConfiguration.Builder realmConfiguration = new RealmConfiguration.Builder()
                 .name("awesomemovies.realm")
                 .schemaVersion(0)
                 .migration(new Migration());

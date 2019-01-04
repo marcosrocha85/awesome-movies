@@ -26,8 +26,9 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
+
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.squareup.picasso.Callback;
@@ -36,16 +37,7 @@ import net.marcosrocha.awesomemovies.R;
 import net.marcosrocha.awesomemovies.models.Movie;
 import net.marcosrocha.awesomemovies.presenters.MovieDetailPresenter;
 import net.marcosrocha.awesomemovies.presenters.MovieRealmPresenter;
-import net.marcosrocha.awesomemovies.protocols.OmdbApiService;
 import net.marcosrocha.awesomemovies.utils.OmdbService;
-import retrofit2.Call;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Observable;
-import rx.Observer;
-
-import java.io.Serializable;
 
 public class MovieDetailActivity extends AppCompatActivity {
     public static final String EXTRA_IMAGE = "net.marcosrocha.awesomemovies.extraImage";
@@ -220,14 +212,22 @@ public class MovieDetailActivity extends AppCompatActivity {
         if (!this.presenter.hasMovieInDatabase(movie)) {
             final MovieDetailActivity self = this;
             OmdbService.details(movie.getImdbId(), new Observer<Movie>() {
-                @Override
-                public void onCompleted() {}
 
                 @Override
                 public void onError(Throwable e) {
                     Toast.makeText(self, "Erro ao carregar detalhes do filme.", Toast.LENGTH_SHORT).show();
                     Log.d("loadMovieData", "Erro ao carregar detalhes do filme.");
                     e.printStackTrace();
+                }
+
+                @Override
+                public void onComplete() {
+
+                }
+
+                @Override
+                public void onSubscribe(Disposable d) {
+
                 }
 
                 @Override
